@@ -1,7 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using NEORISWebAPICore.Data.Context;
-using NEORISWebAPICore.DataAccess.Interfaces;
-using NEORISWebAPICore.DataAccess.Servicios;
+using Prueba.Data.Context;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,7 +14,6 @@ builder.Services.AddDbContext<BancoNEORISContext>(
     {
         options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
     });
-builder.Services.AddTransient<IClienteRepository, ClienteRepository>();
 
 var app = builder.Build();
 

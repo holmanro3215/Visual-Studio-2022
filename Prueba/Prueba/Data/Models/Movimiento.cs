@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace NEORISWebAPICore.Data.Models
+namespace Prueba.Data.Models
 {
     public partial class Movimiento
     {
@@ -11,8 +11,5 @@ namespace NEORISWebAPICore.Data.Models
         public int IdTipoMovimiento { get; set; }
         public int Valor { get; set; }
         public int Saldo { get; set; }
-
-        public virtual Cuenta IdCuentaNavigation { get; set; } = null!;
-        public virtual TipoMovimiento IdTipoMovimientoNavigation { get; set; } = null!;
     }
 }

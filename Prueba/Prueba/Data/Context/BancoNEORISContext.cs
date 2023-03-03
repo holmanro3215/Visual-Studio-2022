@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-using NEORISWebAPICore.Data.Models;
+using Prueba.Data.Models;
 
-namespace NEORISWebAPICore.Data.Context
+namespace Prueba.Data.Context
 {
     public partial class BancoNEORISContext : DbContext
     {
@@ -53,12 +53,6 @@ namespace NEORISWebAPICore.Data.Context
                 entity.HasKey(e => e.IdCuenta);
 
                 entity.Property(e => e.NumeroCuenta).HasMaxLength(50);
-
-                entity.HasOne(d => d.IdTipoCuentaNavigation)
-                    .WithMany(p => p.Cuenta)
-                    .HasForeignKey(d => d.IdTipoCuenta)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Cuentas_TipoCuentas");
             });
 
             modelBuilder.Entity<Genero>(entity =>
@@ -75,18 +69,6 @@ namespace NEORISWebAPICore.Data.Context
                 entity.HasKey(e => e.IdMovimiento);
 
                 entity.Property(e => e.Fecha).HasColumnType("date");
-
-                entity.HasOne(d => d.IdCuentaNavigation)
-                    .WithMany(p => p.Movimientos)
-                    .HasForeignKey(d => d.IdCuenta)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Movimientos_Cuentas");
-
-                entity.HasOne(d => d.IdTipoMovimientoNavigation)
-                    .WithMany(p => p.Movimientos)
-                    .HasForeignKey(d => d.IdTipoMovimiento)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Movimientos_TipoMovimientos");
             });
 
             modelBuilder.Entity<Persona>(entity =>

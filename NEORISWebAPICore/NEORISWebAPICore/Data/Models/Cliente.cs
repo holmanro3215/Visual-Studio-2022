@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace NEORISWebAPICore.Data.Models
 {
@@ -10,6 +11,12 @@ namespace NEORISWebAPICore.Data.Models
         public string Contrasena { get; set; } = null!;
         public bool Estado { get; set; }
 
-        public virtual Persona IdPersonaNavigation { get; set; } = null!;
+        public virtual Persona? IdPersonaNavigation { get; set; } = null!;
+        [NotMapped]
+        public string? NombrePersona { get; internal set; }
+        [NotMapped]
+        public string? DireccionPersona { get; internal set; }
+        [NotMapped]
+        public string? TelefonoPersona { get; internal set; }
     }
 }
