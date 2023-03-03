@@ -5,34 +5,32 @@ using NEORISWebAPICore.DataAccess.Interfaces;
 
 namespace NEORISWebAPICore.DataAccess.Servicios
 {
-    public class ClienteRepository : IClienteRepository
+    public class PersonaRepository : IPersonaRepository
     {
         protected readonly BancoNEORISContext _context;
-        public ClienteRepository(BancoNEORISContext context) => _context = context;
+        public PersonaRepository(BancoNEORISContext context) => _context = context;
 
-        public dynamic GetClientes()
+        public dynamic GetPersonas()
         {
             try
             {
-                List<Cliente> objC = _context.Clientes.ToList();
                 List<Persona> objP = _context.Personas.ToList();
+                List<Genero> objG = _context.Generos.ToList();
 
-                foreach (Cliente cliente in objC)
+                foreach (Persona persona in objP)
                 {
-                    if (objP.Where(o => o.IdPersona == cliente.IdPersona).Count() > 0)
+                    if (objG.Where(o => o.IdGenero == persona.IdGenero).Count() > 0)
                     {
-                        cliente.NombrePersona = objP.FirstOrDefault(o => o.IdPersona == cliente.IdPersona).Nombre;
-                        cliente.DireccionPersona = objP.FirstOrDefault(o => o.IdPersona == cliente.IdPersona).Direccion;
-                        cliente.TelefonoPersona = objP.FirstOrDefault(o => o.IdPersona == cliente.IdPersona).Telefono;
+                        persona.GeneroPersona = objG.FirstOrDefault(o => o.IdGenero == persona.IdGenero).Genero1;
                     }
-                    cliente.IdPersonaNavigation = null;
+                    persona.IdGeneroNavigation = null;
                 }
 
                 return new
                 {
                     success = true,
                     message = "Consulta exitosa",
-                    result = objC
+                    result = objP
                 };
             }
             catch (Exception ex)
@@ -46,30 +44,28 @@ namespace NEORISWebAPICore.DataAccess.Servicios
             }
         }
 
-        public dynamic GetClienteById(int id)
+        public dynamic GetPersonaById(int id)
         {
             try
             {
-                Cliente objC = _context.Clientes.Find(id);
-                List<Persona> objP = _context.Personas.ToList();
+                Persona objP = _context.Personas.Find(id);
+                List<Genero> objG = _context.Generos.ToList();
 
-                if (objC != null)
+                if (objP != null)
                 {
-                    if (objP.Where(o => o.IdPersona == objC.IdPersona).Count() > 0)
+                    if (objG.Where(o => o.IdGenero == objP.IdGenero).Count() > 0)
                     {
-                        objC.NombrePersona = objP.FirstOrDefault(o => o.IdPersona == objC.IdPersona).Nombre;
-                        objC.DireccionPersona = objP.FirstOrDefault(o => o.IdPersona == objC.IdPersona).Direccion;
-                        objC.TelefonoPersona = objP.FirstOrDefault(o => o.IdPersona == objC.IdPersona).Telefono;
+                        objP.GeneroPersona = objG.FirstOrDefault(o => o.IdGenero == objP.IdGenero).Genero1;
                     }
-                    objC.IdPersonaNavigation = null;
+                    objP.IdGeneroNavigation = null;
 
                     return new
                     {
                         success = true,
                         message = "Consulta exitosa",
-                        result = objC
+                        result = objP
                     };
-                } 
+                }
                 else
                 {
                     return new
@@ -79,7 +75,6 @@ namespace NEORISWebAPICore.DataAccess.Servicios
                         result = ""
                     };
                 }
-                
             }
             catch (Exception ex)
             {
@@ -91,12 +86,12 @@ namespace NEORISWebAPICore.DataAccess.Servicios
                 };
             }
         }
-        
-        public dynamic CreateClienteAsync(Cliente cliente)
+
+        public dynamic CreatePersonaAsync(Persona persona)
         {
             try
             {
-                _context.Set<Cliente>().AddAsync(cliente);
+                _context.Set<Persona>().AddAsync(persona);
                 _context.SaveChangesAsync();
 
                 return new
@@ -112,14 +107,14 @@ namespace NEORISWebAPICore.DataAccess.Servicios
                     success = false,
                     message = "Error creando el registro: " + ex.Message
                 };
-            }            
+            }
         }
 
-        public dynamic UpdateClienteAsync(Cliente cliente)
+        public dynamic UpdatePersonaAsync(Persona persona)
         {
             try
             {
-                _context.Entry(cliente).State = EntityState.Modified;
+                _context.Entry(persona).State = EntityState.Modified;
                 _context.SaveChangesAsync();
 
                 return new
@@ -135,14 +130,14 @@ namespace NEORISWebAPICore.DataAccess.Servicios
                     success = false,
                     message = "Error actualizando el registro: " + ex.Message,
                 };
-            }            
+            }
         }
 
-        public dynamic DeleteClienteAsync(Cliente cliente)
+        public dynamic DeletePersonaAsync(Persona persona)
         {
             try
             {
-                if (cliente is null)
+                if (persona is null)
                 {
                     return new
                     {
@@ -150,7 +145,7 @@ namespace NEORISWebAPICore.DataAccess.Servicios
                         message = "Error: El cliente que intenta eliminar no existe"
                     };
                 }
-                _context.Set<Cliente>().Remove(cliente);
+                _context.Set<Persona>().Remove(persona);
                 _context.SaveChangesAsync();
 
                 return new

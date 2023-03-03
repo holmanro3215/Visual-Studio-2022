@@ -54,6 +54,12 @@ namespace NEORISWebAPICore.Data.Context
 
                 entity.Property(e => e.NumeroCuenta).HasMaxLength(50);
 
+                entity.HasOne(d => d.IdClienteNavigation)
+                    .WithMany(p => p.Cuenta)
+                    .HasForeignKey(d => d.IdCliente)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Cuentas_Clientes");
+
                 entity.HasOne(d => d.IdTipoCuentaNavigation)
                     .WithMany(p => p.Cuenta)
                     .HasForeignKey(d => d.IdTipoCuenta)

@@ -17,6 +17,7 @@ builder.Services.AddDbContext<BancoNEORISContext>(
         options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
     });
 builder.Services.AddTransient<IClienteRepository, ClienteRepository>();
+builder.Services.AddTransient<IPersonaRepository, PersonaRepository>();
 
 var app = builder.Build();
 

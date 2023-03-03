@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace NEORISWebAPICore.Data.Models
 {
@@ -18,7 +19,9 @@ namespace NEORISWebAPICore.Data.Models
         public string Direccion { get; set; } = null!;
         public string Telefono { get; set; } = null!;
 
-        public virtual Genero IdGeneroNavigation { get; set; } = null!;
+        public virtual Genero? IdGeneroNavigation { get; set; } = null!;
         public virtual ICollection<Cliente> Clientes { get; set; }
+        [NotMapped]
+        public string? GeneroPersona { get; internal set; }
     }
 }
