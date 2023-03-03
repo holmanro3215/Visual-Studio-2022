@@ -30,10 +30,7 @@ namespace NEORISWebAPICore.Controllers
         public dynamic GetPersonaById(int id)
         {
             var personaByID = _personaRepository.GetPersonaById(id);
-            if (personaByID == null)
-            {
-                return NotFound();
-            }
+            
             return personaByID;
         }
 

@@ -18,6 +18,7 @@ builder.Services.AddDbContext<BancoNEORISContext>(
     });
 builder.Services.AddTransient<IClienteRepository, ClienteRepository>();
 builder.Services.AddTransient<IPersonaRepository, PersonaRepository>();
+builder.Services.AddTransient<ICuentaRepository, CuentaRepository>();
 
 var app = builder.Build();
 

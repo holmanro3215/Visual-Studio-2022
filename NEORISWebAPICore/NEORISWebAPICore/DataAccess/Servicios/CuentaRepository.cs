@@ -5,31 +5,43 @@ using NEORISWebAPICore.DataAccess.Interfaces;
 
 namespace NEORISWebAPICore.DataAccess.Servicios
 {
-    public class PersonaRepository : IPersonaRepository
+    public class CuentaRepository : ICuentaRepository
     {
         protected readonly BancoNEORISContext _context;
-        public PersonaRepository(BancoNEORISContext context) => _context = context;
+        public CuentaRepository(BancoNEORISContext context) => _context = context;
 
-        public dynamic GetPersonas()
+        public dynamic GetCuentas()
         {
             try
             {
-                List<Persona> objP = _context.Personas.ToList();
-
-                foreach (Persona persona in objP)
+                List<Cuenta> objC = _context.Cuentas.ToList();
+                
+                foreach (Cuenta cuenta in objC)
                 {
-                    if (_context.Generos.Where(o => o.IdGenero == persona.IdGenero).Count() > 0)
+                    if (_context.TipoCuentas.Where(o => o.IdTipoCuenta == cuenta.IdTipoCuenta).Count() > 0)
                     {
-                        persona.GeneroPersona = _context.Generos.FirstOrDefault(o => o.IdGenero == persona.IdGenero).Genero1;
+                        cuenta.NTipoCuenta = _context.TipoCuentas.FirstOrDefault(o => o.IdTipoCuenta == cuenta.IdTipoCuenta).TipoCuenta1;
                     }
-                    persona.IdGeneroNavigation = null;
+
+                    if (_context.Clientes.Where(x => x.IdCliente == cuenta.IdCliente).Count() > 0)
+                    {
+                        var idPersona = _context.Clientes.FirstOrDefault(x => x.IdCliente == cuenta.IdCliente).IdPersona;
+
+                        if (_context.Personas.Where(x => x.IdPersona == idPersona).Count() > 0)
+                        {
+                            cuenta.NombreCliente = _context.Personas.FirstOrDefault(x => x.IdPersona == idPersona).Nombre;
+                        }
+                    }
+
+                    cuenta.IdClienteNavigation = null;
+                    cuenta.IdTipoCuentaNavigation = null;
                 }
 
                 return new
                 {
                     success = true,
                     message = "Consulta exitosa",
-                    result = objP
+                    result = objC
                 };
             }
             catch (Exception ex)
@@ -43,25 +55,37 @@ namespace NEORISWebAPICore.DataAccess.Servicios
             }
         }
 
-        public dynamic GetPersonaById(int id)
+        public dynamic GetCuentaById(int id)
         {
             try
             {
-                Persona objP = _context.Personas.Find(id);
+                Cuenta objC = _context.Cuentas.Find(id);
 
-                if (objP != null)
+                if (objC != null)
                 {
-                    if (_context.Generos.Where(o => o.IdGenero == objP.IdGenero).Count() > 0)
+                    if (_context.TipoCuentas.Where(o => o.IdTipoCuenta == objC.IdTipoCuenta).Count() > 0)
                     {
-                        objP.GeneroPersona = _context.Generos.FirstOrDefault(o => o.IdGenero == objP.IdGenero).Genero1;
+                        objC.NTipoCuenta = _context.TipoCuentas.FirstOrDefault(o => o.IdTipoCuenta == objC.IdTipoCuenta).TipoCuenta1;
                     }
-                    objP.IdGeneroNavigation = null;
+
+                    if (_context.Clientes.Where(x => x.IdCliente == objC.IdCliente).Count() > 0)
+                    {
+                        var idPersona = _context.Clientes.FirstOrDefault(x => x.IdCliente == objC.IdCliente).IdPersona;
+
+                        if (_context.Personas.Where(x => x.IdPersona == idPersona).Count() > 0)
+                        {
+                            objC.NombreCliente = _context.Personas.FirstOrDefault(x => x.IdPersona == idPersona).Nombre;
+                        }
+                    }
+
+                    objC.IdClienteNavigation = null;
+                    objC.IdTipoCuentaNavigation = null;
 
                     return new
                     {
                         success = true,
                         message = "Consulta exitosa",
-                        result = objP
+                        result = objC
                     };
                 }
                 else
@@ -73,6 +97,7 @@ namespace NEORISWebAPICore.DataAccess.Servicios
                         result = ""
                     };
                 }
+
             }
             catch (Exception ex)
             {
@@ -85,11 +110,11 @@ namespace NEORISWebAPICore.DataAccess.Servicios
             }
         }
 
-        public dynamic CreatePersonaAsync(Persona persona)
+        public dynamic CreateCuentaAsync(Cuenta cuenta)
         {
             try
             {
-                _context.Set<Persona>().AddAsync(persona);
+                _context.Set<Cuenta>().AddAsync(cuenta);
                 _context.SaveChangesAsync();
 
                 return new
@@ -108,11 +133,11 @@ namespace NEORISWebAPICore.DataAccess.Servicios
             }
         }
 
-        public dynamic UpdatePersonaAsync(Persona persona)
+        public dynamic UpdateCuentaAsync(Cuenta cuenta)
         {
             try
             {
-                _context.Entry(persona).State = EntityState.Modified;
+                _context.Entry(cuenta).State = EntityState.Modified;
                 _context.SaveChangesAsync();
 
                 return new
@@ -131,19 +156,19 @@ namespace NEORISWebAPICore.DataAccess.Servicios
             }
         }
 
-        public dynamic DeletePersonaAsync(Persona persona)
+        public dynamic DeleteCuentaAsync(Cuenta cuenta)
         {
             try
             {
-                if (persona is null)
+                if (cuenta is null)
                 {
                     return new
                     {
                         success = false,
-                        message = "Error: El cliente que intenta eliminar no existe"
+                        message = "Error: La cuenta que intenta eliminar no existe"
                     };
                 }
-                _context.Set<Persona>().Remove(persona);
+                _context.Set<Cuenta>().Remove(cuenta);
                 _context.SaveChangesAsync();
 
                 return new

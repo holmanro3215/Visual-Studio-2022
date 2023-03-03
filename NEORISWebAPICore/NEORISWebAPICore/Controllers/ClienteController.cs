@@ -30,10 +30,7 @@ namespace NEORISWebAPICore.Controllers
         public dynamic GetClienteById(int id)
         {
             var clienteByID = _clienteRepository.GetClienteById(id);
-            if (clienteByID == null)
-            {
-                return NotFound();
-            }
+            
             return clienteByID;
         }
 

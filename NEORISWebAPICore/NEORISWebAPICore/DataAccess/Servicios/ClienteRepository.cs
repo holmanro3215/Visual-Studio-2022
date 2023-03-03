@@ -15,15 +15,14 @@ namespace NEORISWebAPICore.DataAccess.Servicios
             try
             {
                 List<Cliente> objC = _context.Clientes.ToList();
-                List<Persona> objP = _context.Personas.ToList();
 
                 foreach (Cliente cliente in objC)
                 {
-                    if (objP.Where(o => o.IdPersona == cliente.IdPersona).Count() > 0)
+                    if (_context.Personas.Where(o => o.IdPersona == cliente.IdPersona).Count() > 0)
                     {
-                        cliente.NombrePersona = objP.FirstOrDefault(o => o.IdPersona == cliente.IdPersona).Nombre;
-                        cliente.DireccionPersona = objP.FirstOrDefault(o => o.IdPersona == cliente.IdPersona).Direccion;
-                        cliente.TelefonoPersona = objP.FirstOrDefault(o => o.IdPersona == cliente.IdPersona).Telefono;
+                        cliente.NombrePersona = _context.Personas.FirstOrDefault(o => o.IdPersona == cliente.IdPersona).Nombre;
+                        cliente.DireccionPersona = _context.Personas.FirstOrDefault(o => o.IdPersona == cliente.IdPersona).Direccion;
+                        cliente.TelefonoPersona = _context.Personas.FirstOrDefault(o => o.IdPersona == cliente.IdPersona).Telefono;
                     }
                     cliente.IdPersonaNavigation = null;
                 }
@@ -51,15 +50,14 @@ namespace NEORISWebAPICore.DataAccess.Servicios
             try
             {
                 Cliente objC = _context.Clientes.Find(id);
-                List<Persona> objP = _context.Personas.ToList();
 
                 if (objC != null)
                 {
-                    if (objP.Where(o => o.IdPersona == objC.IdPersona).Count() > 0)
+                    if (_context.Personas.Where(o => o.IdPersona == objC.IdPersona).Count() > 0)
                     {
-                        objC.NombrePersona = objP.FirstOrDefault(o => o.IdPersona == objC.IdPersona).Nombre;
-                        objC.DireccionPersona = objP.FirstOrDefault(o => o.IdPersona == objC.IdPersona).Direccion;
-                        objC.TelefonoPersona = objP.FirstOrDefault(o => o.IdPersona == objC.IdPersona).Telefono;
+                        objC.NombrePersona = _context.Personas.FirstOrDefault(o => o.IdPersona == objC.IdPersona).Nombre;
+                        objC.DireccionPersona = _context.Personas.FirstOrDefault(o => o.IdPersona == objC.IdPersona).Direccion;
+                        objC.TelefonoPersona = _context.Personas.FirstOrDefault(o => o.IdPersona == objC.IdPersona).Telefono;
                     }
                     objC.IdPersonaNavigation = null;
 
