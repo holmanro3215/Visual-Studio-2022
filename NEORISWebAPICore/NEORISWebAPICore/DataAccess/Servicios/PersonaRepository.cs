@@ -2,6 +2,7 @@
 using NEORISWebAPICore.Data.Context;
 using NEORISWebAPICore.Data.Models;
 using NEORISWebAPICore.DataAccess.Interfaces;
+using NEORISWebAPICore.Entity;
 
 namespace NEORISWebAPICore.DataAccess.Servicios
 {
@@ -15,21 +16,31 @@ namespace NEORISWebAPICore.DataAccess.Servicios
             try
             {
                 List<Persona> objP = _context.Personas.ToList();
+                List<EntityPersona> EPersona = new List<EntityPersona>();
 
                 foreach (Persona persona in objP)
                 {
+                    EntityPersona entityPersona = new EntityPersona();
+
                     if (_context.Generos.Where(o => o.IdGenero == persona.IdGenero).Count() > 0)
                     {
-                        persona.GeneroPersona = _context.Generos.FirstOrDefault(o => o.IdGenero == persona.IdGenero).Genero1;
+                        entityPersona.Genero = _context.Generos.FirstOrDefault(o => o.IdGenero == persona.IdGenero).Genero1;
                     }
-                    persona.IdGeneroNavigation = null;
+
+                    entityPersona.Nombre = persona.Nombre;
+                    entityPersona.Edad = persona.Edad;
+                    entityPersona.Identificacion = persona.Identificacion;
+                    entityPersona.Direccion = persona.Direccion;
+                    entityPersona.Telefono = persona.Telefono;
+
+                    EPersona.Add(entityPersona);
                 }
 
                 return new
                 {
                     success = true,
                     message = "Consulta exitosa",
-                    result = objP
+                    result = EPersona
                 };
             }
             catch (Exception ex)
@@ -48,20 +59,26 @@ namespace NEORISWebAPICore.DataAccess.Servicios
             try
             {
                 Persona objP = _context.Personas.Find(id);
+                EntityPersona entityPersona = new EntityPersona();
 
                 if (objP != null)
                 {
                     if (_context.Generos.Where(o => o.IdGenero == objP.IdGenero).Count() > 0)
                     {
-                        objP.GeneroPersona = _context.Generos.FirstOrDefault(o => o.IdGenero == objP.IdGenero).Genero1;
+                        entityPersona.Genero = _context.Generos.FirstOrDefault(o => o.IdGenero == objP.IdGenero).Genero1;
                     }
-                    objP.IdGeneroNavigation = null;
+
+                    entityPersona.Nombre = objP.Nombre;
+                    entityPersona.Edad = objP.Edad;
+                    entityPersona.Identificacion = objP.Identificacion;
+                    entityPersona.Direccion = objP.Direccion;
+                    entityPersona.Telefono = objP.Telefono;
 
                     return new
                     {
                         success = true,
                         message = "Consulta exitosa",
-                        result = objP
+                        result = entityPersona
                     };
                 }
                 else

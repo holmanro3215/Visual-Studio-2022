@@ -2,6 +2,7 @@
 using NEORISWebAPICore.Data.Context;
 using NEORISWebAPICore.Data.Models;
 using NEORISWebAPICore.DataAccess.Interfaces;
+using NEORISWebAPICore.Entity;
 
 namespace NEORISWebAPICore.DataAccess.Servicios
 {
@@ -15,23 +16,30 @@ namespace NEORISWebAPICore.DataAccess.Servicios
             try
             {
                 List<Cliente> objC = _context.Clientes.ToList();
+                List<EntityCliente> ECliente = new List<EntityCliente>();
 
                 foreach (Cliente cliente in objC)
                 {
+                    EntityCliente entityCliente = new EntityCliente();
+
                     if (_context.Personas.Where(o => o.IdPersona == cliente.IdPersona).Count() > 0)
                     {
-                        cliente.NombrePersona = _context.Personas.FirstOrDefault(o => o.IdPersona == cliente.IdPersona).Nombre;
-                        cliente.DireccionPersona = _context.Personas.FirstOrDefault(o => o.IdPersona == cliente.IdPersona).Direccion;
-                        cliente.TelefonoPersona = _context.Personas.FirstOrDefault(o => o.IdPersona == cliente.IdPersona).Telefono;
+                        entityCliente.Nombres = _context.Personas.FirstOrDefault(o => o.IdPersona == cliente.IdPersona).Nombre;
+                        entityCliente.Direccion = _context.Personas.FirstOrDefault(o => o.IdPersona == cliente.IdPersona).Direccion;
+                        entityCliente.Telefono = _context.Personas.FirstOrDefault(o => o.IdPersona == cliente.IdPersona).Telefono;
                     }
-                    cliente.IdPersonaNavigation = null;
+
+                    entityCliente.Contrasena = cliente.Contrasena;
+                    entityCliente.Estado = cliente.Estado;
+
+                    ECliente.Add(entityCliente);
                 }
 
                 return new
                 {
                     success = true,
                     message = "Consulta exitosa",
-                    result = objC
+                    result = ECliente
                 };
             }
             catch (Exception ex)
@@ -50,22 +58,25 @@ namespace NEORISWebAPICore.DataAccess.Servicios
             try
             {
                 Cliente objC = _context.Clientes.Find(id);
+                EntityCliente entityCliente = new EntityCliente();
 
                 if (objC != null)
                 {
                     if (_context.Personas.Where(o => o.IdPersona == objC.IdPersona).Count() > 0)
                     {
-                        objC.NombrePersona = _context.Personas.FirstOrDefault(o => o.IdPersona == objC.IdPersona).Nombre;
-                        objC.DireccionPersona = _context.Personas.FirstOrDefault(o => o.IdPersona == objC.IdPersona).Direccion;
-                        objC.TelefonoPersona = _context.Personas.FirstOrDefault(o => o.IdPersona == objC.IdPersona).Telefono;
+                        entityCliente.Nombres = _context.Personas.FirstOrDefault(o => o.IdPersona == objC.IdPersona).Nombre;
+                        entityCliente.Direccion = _context.Personas.FirstOrDefault(o => o.IdPersona == objC.IdPersona).Direccion;
+                        entityCliente.Telefono = _context.Personas.FirstOrDefault(o => o.IdPersona == objC.IdPersona).Telefono;
                     }
-                    objC.IdPersonaNavigation = null;
+
+                    entityCliente.Contrasena = objC.Contrasena;
+                    entityCliente.Estado = objC.Estado;
 
                     return new
                     {
                         success = true,
                         message = "Consulta exitosa",
-                        result = objC
+                        result = entityCliente
                     };
                 } 
                 else

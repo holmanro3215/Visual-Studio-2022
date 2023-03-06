@@ -29,7 +29,7 @@ namespace NEORISWebAPICore.Data.Context
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=DESKTOP-ULJD9IP;Database=BancoNEORIS;user=sa;password=1q2w3e;Trusted_Connection=True;");
+                optionsBuilder.UseSqlServer("DefaultConnection");
             }
         }
 

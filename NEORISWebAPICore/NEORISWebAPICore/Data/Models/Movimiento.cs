@@ -10,9 +10,9 @@ namespace NEORISWebAPICore.Data.Models
         public DateTime Fecha { get; set; }
         public int IdTipoMovimiento { get; set; }
         public int Valor { get; set; }
-        public int Saldo { get; set; }
+        public int? Saldo { get; set; }
 
-        public virtual Cuenta IdCuentaNavigation { get; set; } = null!;
-        public virtual TipoMovimiento IdTipoMovimientoNavigation { get; set; } = null!;
+        public virtual Cuenta? IdCuentaNavigation { get; set; } = null!;
+        public virtual TipoMovimiento? IdTipoMovimientoNavigation { get; set; } = null!;
     }
 }

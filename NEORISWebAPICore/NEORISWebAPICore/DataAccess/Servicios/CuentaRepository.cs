@@ -2,6 +2,7 @@
 using NEORISWebAPICore.Data.Context;
 using NEORISWebAPICore.Data.Models;
 using NEORISWebAPICore.DataAccess.Interfaces;
+using NEORISWebAPICore.Entity;
 
 namespace NEORISWebAPICore.DataAccess.Servicios
 {
@@ -15,12 +16,15 @@ namespace NEORISWebAPICore.DataAccess.Servicios
             try
             {
                 List<Cuenta> objC = _context.Cuentas.ToList();
-                
+                List<EntityCuenta> ECuenta = new List<EntityCuenta>();
+
                 foreach (Cuenta cuenta in objC)
                 {
+                    EntityCuenta entityCuenta = new EntityCuenta();
+
                     if (_context.TipoCuentas.Where(o => o.IdTipoCuenta == cuenta.IdTipoCuenta).Count() > 0)
                     {
-                        cuenta.NTipoCuenta = _context.TipoCuentas.FirstOrDefault(o => o.IdTipoCuenta == cuenta.IdTipoCuenta).TipoCuenta1;
+                        entityCuenta.Tipo = _context.TipoCuentas.FirstOrDefault(o => o.IdTipoCuenta == cuenta.IdTipoCuenta).TipoCuenta1;
                     }
 
                     if (_context.Clientes.Where(x => x.IdCliente == cuenta.IdCliente).Count() > 0)
@@ -29,19 +33,22 @@ namespace NEORISWebAPICore.DataAccess.Servicios
 
                         if (_context.Personas.Where(x => x.IdPersona == idPersona).Count() > 0)
                         {
-                            cuenta.NombreCliente = _context.Personas.FirstOrDefault(x => x.IdPersona == idPersona).Nombre;
+                            entityCuenta.Cliente = _context.Personas.FirstOrDefault(x => x.IdPersona == idPersona).Nombre;
                         }
                     }
 
-                    cuenta.IdClienteNavigation = null;
-                    cuenta.IdTipoCuentaNavigation = null;
+                    entityCuenta.NumeroCuenta = cuenta.NumeroCuenta;
+                    entityCuenta.SaldoInicial = cuenta.SaldoInicial;
+                    entityCuenta.Estado = cuenta.Estado;
+
+                    ECuenta.Add(entityCuenta);
                 }
 
                 return new
                 {
                     success = true,
                     message = "Consulta exitosa",
-                    result = objC
+                    result = ECuenta
                 };
             }
             catch (Exception ex)
@@ -60,12 +67,13 @@ namespace NEORISWebAPICore.DataAccess.Servicios
             try
             {
                 Cuenta objC = _context.Cuentas.Find(id);
+                EntityCuenta entityCuenta = new EntityCuenta();
 
                 if (objC != null)
                 {
                     if (_context.TipoCuentas.Where(o => o.IdTipoCuenta == objC.IdTipoCuenta).Count() > 0)
                     {
-                        objC.NTipoCuenta = _context.TipoCuentas.FirstOrDefault(o => o.IdTipoCuenta == objC.IdTipoCuenta).TipoCuenta1;
+                        entityCuenta.Tipo = _context.TipoCuentas.FirstOrDefault(o => o.IdTipoCuenta == objC.IdTipoCuenta).TipoCuenta1;
                     }
 
                     if (_context.Clientes.Where(x => x.IdCliente == objC.IdCliente).Count() > 0)
@@ -74,18 +82,19 @@ namespace NEORISWebAPICore.DataAccess.Servicios
 
                         if (_context.Personas.Where(x => x.IdPersona == idPersona).Count() > 0)
                         {
-                            objC.NombreCliente = _context.Personas.FirstOrDefault(x => x.IdPersona == idPersona).Nombre;
+                            entityCuenta.Cliente = _context.Personas.FirstOrDefault(x => x.IdPersona == idPersona).Nombre;
                         }
                     }
 
-                    objC.IdClienteNavigation = null;
-                    objC.IdTipoCuentaNavigation = null;
+                    entityCuenta.NumeroCuenta = objC.NumeroCuenta;
+                    entityCuenta.SaldoInicial = objC.SaldoInicial;
+                    entityCuenta.Estado = objC.Estado;
 
                     return new
                     {
                         success = true,
                         message = "Consulta exitosa",
-                        result = objC
+                        result = entityCuenta
                     };
                 }
                 else
